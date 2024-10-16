@@ -2,13 +2,11 @@ export const findLCS = (text1, text2) => {
     const m = text1.length;
     const n = text2.length;
   
-    // Crear una tabla para almacenar la longitud de las subcadenas comunes
     const lcsTable = Array(m + 1).fill(null).map(() => Array(n + 1).fill(0));
   
     let longestLength = 0;
     let endIndexText1 = 0;
   
-    // Llenar la tabla y encontrar la longitud máxima
     for (let i = 1; i <= m; i++) {
       for (let j = 1; j <= n; j++) {
         if (text1[i - 1] === text2[j - 1]) {

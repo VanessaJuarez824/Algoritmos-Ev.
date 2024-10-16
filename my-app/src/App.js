@@ -7,27 +7,28 @@ function App() {
   const [text1, setText1] = useState(''); 
   const [text2, setText2] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
-  const [highlightedText1, setHighlightedText1] = useState(''); // Texto con resaltado en T1
-  const [highlightedText2, setHighlightedText2] = useState(''); // Texto con resaltado en T2
-  const [matches, setMatches] = useState([]); // Posiciones de los matches
+  const [highlightedText1, setHighlightedText1] = useState(''); // Texto con resaltado T1
+  const [highlightedText2, setHighlightedText2] = useState(''); // Texto con resaltado T2
+  const [matches, setMatches] = useState([]); 
   const [currentMatchIndex, setCurrentMatchIndex] = useState(0); // Índice actual del match
 
-  // Función para leer archivo y setear su contenido
-  const handleFileRead = (event, setText, setHighlightedText) => {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const content = e.target.result;
-      setText(content); // Actualizamos el estado con el contenido del archivo
-      setHighlightedText(content); // Restablecemos el texto resaltado al contenido original
-    };
-    reader.readAsText(file);
+// Función para leer archivo y setear su contenido
+const handleFileRead = (event, setText, setHighlightedText) => {
+  const file = event.target.files[0];
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const content = e.target.result;
+    setText(content); 
+    setHighlightedText(content); 
   };
+  reader.readAsText(file);
+};
+
 
   // Función para limpiar el texto
   const clearText = (setText, setHighlightedText) => {
     setText('');
-    setHighlightedText('');
+    setHighlightedText(''); 
   };
 
   // Función para realizar la búsqueda con el algoritmo Z
@@ -41,9 +42,6 @@ function App() {
     highlightLCS(text1, text2, setHighlightedText1, setHighlightedText2);
   };
 
-  // Desactivar el botón de similitud si no hay dos textos
-  const isSimilarityDisabled = !text1 || !text2; 
-
   // Función para navegar a la siguiente coincidencia
   const handleNext = () => {
     if (matches.length > 0) {
@@ -56,7 +54,7 @@ function App() {
   // Función para navegar a la coincidencia anterior
   const handlePrevious = () => {
     if (matches.length > 0) {
-      const prevIndex = (currentMatchIndex - 1 + matches.length) % matches.length; // Retroceder al match anterior
+      const prevIndex = (currentMatchIndex - 1 + matches.length) % matches.length; 
       setCurrentMatchIndex(prevIndex);
       highlightMatch(matches, prevIndex);
     }
@@ -88,7 +86,7 @@ function App() {
                 type="file"
                 accept=".txt"
                 style={{ display: 'none' }}
-                onChange={(e) => handleFileRead(e, setText1, setHighlightedText1)} // Cargar el archivo en el text1
+                onChange={(e) => handleFileRead(e, setText1, setHighlightedText1)} 
               />
             </label>
             <button 
@@ -104,13 +102,11 @@ function App() {
           />
         </div>
 
-        {/* Controles de las flechas para navegar entre matches */}
         <div className="controls">
           <button className="arrow-btn" onClick={handlePrevious}>⬆️</button>
           <button className="arrow-btn" onClick={handleNext}>⬇️</button>
         </div>
 
-        {/* Sección del segundo texto */}
         <div className="text-section">
           <div className="text-buttons">
             <label className="new-text-btn">
@@ -136,7 +132,7 @@ function App() {
         </div>
       </div>
 
-      <div className="footer">
+      <div className="search-section">
         <input
           type="text"
           placeholder="Buscar patrón"
@@ -148,16 +144,31 @@ function App() {
         <button
           onClick={handleSimilarity}
           className="option-btn"
-          disabled={isSimilarityDisabled} // Desactivar el botón si falta uno de los textos
+          disabled={!text1 || !text2} 
           style={{
-            backgroundColor: isSimilarityDisabled ? 'grey' : '#000',
-            cursor: isSimilarityDisabled ? 'not-allowed' : 'pointer',
+            backgroundColor: !text1 || !text2 ? 'grey' : '#000',
+            cursor: !text1 || !text2 ? 'not-allowed' : 'pointer',
           }}
         >
           Similitudes
         </button>
-        <button className="option-btn">Palindromo</button>
-        <button className="autocomplete-btn">Auto-completar</button>
+      </div>
+
+      {/* Footer con las tarjetas de Palindromo y Autocompletar */}
+      <div className="footer">
+        <div className="cards-section">
+          <div className="card">
+            <h3>Palindromo</h3>
+            <p>Detectar si hay un palíndromo en el texto.</p>
+            <button className="card-btn">Ejecutar</button>
+          </div>
+
+          <div className="card">
+            <h3>Autocompletar</h3>
+            <p>Autocompletar palabras en base al texto.</p>
+            <button className="card-btn">Ejecutar</button>
+          </div>
+        </div>
       </div>
     </div>
   );
