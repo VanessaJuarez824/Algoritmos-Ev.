@@ -1,34 +1,48 @@
 import React, { useState } from 'react';
 import './App.css';
 import { searchPattern } from './functions/search';
-import { highlightLCS } from './functions/similarity'; 
+import { highlightLCS } from './functions/similarity';
+import { highlightPalindrome, manacher } from './functions/palindrome';
+import { buildTrieFromText, autocomplete } from './functions/autocomplete'; // Importamos el Trie para autocompletar
 
 function App() {
   const [text1, setText1] = useState(''); 
   const [text2, setText2] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
-  const [highlightedText1, setHighlightedText1] = useState(''); // Texto con resaltado T1
-  const [highlightedText2, setHighlightedText2] = useState(''); // Texto con resaltado T2
+  const [highlightedText1, setHighlightedText1] = useState(''); 
+  const [highlightedText2, setHighlightedText2] = useState(''); 
   const [matches, setMatches] = useState([]); 
-  const [currentMatchIndex, setCurrentMatchIndex] = useState(0); // Índice actual del match
+  const [currentMatchIndex, setCurrentMatchIndex] = useState(0); 
+  const [largestPalindrome, setLargestPalindrome] = useState(''); 
+  const [trie, setTrie] = useState(null); 
+  const [autocompleteSuggestions, setAutocompleteSuggestions] = useState([]); 
+  const [inputValue, setInputValue] = useState(''); 
 
-// Función para leer archivo y setear su contenido
-const handleFileRead = (event, setText, setHighlightedText) => {
-  const file = event.target.files[0];
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    const content = e.target.result;
-    setText(content); 
-    setHighlightedText(content); 
+  // Función para leer archivo y setear su contenido
+  const handleFileRead = (event, setText, setHighlightedText, updateTrie) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const content = e.target.result;
+      setText(content);
+      setHighlightedText(content);
+
+      if (updateTrie) {
+        const trie = buildTrieFromText(content); // Generamos el Trie a partir del nuevo texto
+        setTrie(trie); // Actualizamos el Trie
+      }
+    };
+    reader.readAsText(file);
   };
-  reader.readAsText(file);
-};
-
 
   // Función para limpiar el texto
-  const clearText = (setText, setHighlightedText) => {
+  const clearText = (setText, setHighlightedText, clearTrie) => {
     setText('');
     setHighlightedText(''); 
+    setLargestPalindrome(''); 
+    if (clearTrie) {
+      setTrie(null); 
+    }
   };
 
   // Función para realizar la búsqueda con el algoritmo Z
@@ -40,6 +54,13 @@ const handleFileRead = (event, setText, setHighlightedText) => {
   // Función para encontrar la similitud más grande (LCS)
   const handleSimilarity = () => {
     highlightLCS(text1, text2, setHighlightedText1, setHighlightedText2);
+  };
+
+  // Función para ejecutar el algoritmo Manacher y actualizar la tarjeta con el palíndromo más grande
+  const handlePalindrome = () => {
+    highlightPalindrome(text1, setHighlightedText1); 
+    const palindrome = manacher(text1); 
+    setLargestPalindrome(palindrome); 
   };
 
   // Función para navegar a la siguiente coincidencia
@@ -70,6 +91,18 @@ const handleFileRead = (event, setText, setHighlightedText) => {
     setHighlightedText1(`${beforeMatch}<mark>${match}</mark>${afterMatch}`);
   };
 
+  // Función para ejecutar el algoritmo de autocompletar con palabras
+  const handleAutocomplete = (e) => {
+    const input = e.target.value;
+    setInputValue(input); 
+    if (trie && input.length > 0) {
+      const suggestions = autocomplete(trie, input, text1); // Buscamos palabras que comiencen con el prefijo
+      setAutocompleteSuggestions(suggestions);
+    } else {
+      setAutocompleteSuggestions([]); 
+    }
+  };
+  
   return (
     <div className="container">
       <header className="header">
@@ -77,7 +110,6 @@ const handleFileRead = (event, setText, setHighlightedText) => {
       </header>
 
       <div className="content">
-        {/* Sección del primer texto */}
         <div className="text-section">
           <div className="text-buttons">
             <label className="new-text-btn">
@@ -86,12 +118,12 @@ const handleFileRead = (event, setText, setHighlightedText) => {
                 type="file"
                 accept=".txt"
                 style={{ display: 'none' }}
-                onChange={(e) => handleFileRead(e, setText1, setHighlightedText1)} 
+                onChange={(e) => handleFileRead(e, setText1, setHighlightedText1, true)} 
               />
             </label>
             <button 
               className="clear-btn" 
-              onClick={() => clearText(setText1, setHighlightedText1)}
+              onClick={() => clearText(setText1, setHighlightedText1, true)} 
             >
               Clear
             </button>
@@ -115,12 +147,12 @@ const handleFileRead = (event, setText, setHighlightedText) => {
                 type="file"
                 accept=".txt"
                 style={{ display: 'none' }}
-                onChange={(e) => handleFileRead(e, setText2, setHighlightedText2)} 
+                onChange={(e) => handleFileRead(e, setText2, setHighlightedText2, false)} 
               />
             </label>
             <button 
               className="clear-btn" 
-              onClick={() => clearText(setText2, setHighlightedText2)}
+              onClick={() => clearText(setText2, setHighlightedText2, false)}
             >
               Clear
             </button>
@@ -154,19 +186,37 @@ const handleFileRead = (event, setText, setHighlightedText) => {
         </button>
       </div>
 
-      {/* Footer con las tarjetas de Palindromo y Autocompletar */}
       <div className="footer">
         <div className="cards-section">
           <div className="card">
             <h3>Palindromo</h3>
             <p>Detectar si hay un palíndromo en el texto.</p>
-            <button className="card-btn">Ejecutar</button>
+            <button className="card-btn" onClick={handlePalindrome}>Ejecutar</button>
+            {largestPalindrome && (
+              <div style={{ marginTop: '10px', textAlign: 'center', fontSize: '24px', fontWeight: 'bold' }}>
+                El palíndromo más grande es: 
+                <div style={{ fontSize: '30px', marginTop: '10px' }}>{largestPalindrome}</div>
+              </div>
+            )}
           </div>
 
           <div className="card">
             <h3>Autocompletar</h3>
             <p>Autocompletar palabras en base al texto.</p>
-            <button className="card-btn">Ejecutar</button>
+            <input
+              type="text"
+              value={inputValue}
+              onChange={handleAutocomplete}
+              placeholder="Escribe para autocompletar"
+              className="autocomplete-input"
+            />
+            <ul className="autocomplete-suggestions">
+              {autocompleteSuggestions.map((suggestion, index) => (
+                <li key={index} onClick={() => setInputValue(suggestion)}>
+                  {suggestion}
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </div>

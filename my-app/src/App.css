@@ -220,4 +220,33 @@ body {
 .card-btn:hover {
   background-color: #2b9f2b;
 }
+.autocomplete-input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 3px;
+  box-sizing: border-box;
+}
 
+.autocomplete-suggestions {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  max-height: 150px;
+  overflow-y: auto;
+  position: absolute;
+  width: auto; /* El ancho será automático según el contenido */
+  max-width: 100%; /* Asegura que no se desborde */
+  z-index: 1;
+  white-space: nowrap; /* Asegura que no haya salto de línea */
+}
+
+.autocomplete-suggestions li {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.autocomplete-suggestions li:hover {
+  background-color: #eee;
+}
