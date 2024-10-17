@@ -42,7 +42,7 @@ export function manacher(text) {
     // Creamos el texto resaltado, con el palíndromo en verde
     const beforePalindrome = text.slice(0, startIndex);
     const afterPalindrome = text.slice(endIndex);
-    const highlightedText = `${beforePalindrome}<mark style="background-color: green">${palindrome}</mark>${afterPalindrome}`;
+    const highlightedText = `${beforePalindrome}<mark style="background-color: #32CD32">${palindrome}</mark>${afterPalindrome}`;
   
     // Actualizamos el estado del texto resaltado
     setHighlightedText1(highlightedText);

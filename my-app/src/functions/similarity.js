@@ -14,16 +14,15 @@ export const findLCS = (text1, text2) => {
   
           if (lcsTable[i][j] > longestLength) {
             longestLength = lcsTable[i][j];
-            endIndexText1 = i; // Guardamos el final de la subcadena en text1
+            endIndexText1 = i; 
           }
         }
       }
     }
   
-    // La subcadena más larga se encuentra en text1 entre endIndexText1 - longestLength y endIndexText1
     const lcs = text1.slice(endIndexText1 - longestLength, endIndexText1);
   
-    return lcs; // Retornamos la subcadena común más larga
+    return lcs; 
   };
   
   export const highlightLCS = (text1, text2, setHighlightedText1, setHighlightedText2) => {

@@ -26,11 +26,11 @@ export const zAlgorithm = (pattern, text) => {
     }
   }
 
-  // Encontrar las posiciones donde el patrón aparece
+  // Encontrar posiciones donde el patrón aparece
   const result = [];
   for (let i = 0; i < Z.length; i++) {
     if (Z[i] === pattern.length) {
-      result.push(i - pattern.length - 1); // Guardar posición 
+      result.push(i - pattern.length - 1);
     }
   }
   return result; 
@@ -38,7 +38,7 @@ export const zAlgorithm = (pattern, text) => {
 
 export const searchPattern = (pattern, text1, setHighlightedText, setMatches, setCurrentMatchIndex) => {
   if (!pattern) {
-    return; // Si no hay patrón, no hacemos nada
+    return; 
   }
 
   const matches = zAlgorithm(pattern, text1);
@@ -51,7 +51,7 @@ export const searchPattern = (pattern, text1, setHighlightedText, setMatches, se
   setMatches(matches); 
   setCurrentMatchIndex(0); 
 
-  // Resaltar todas las coincidencias en texto
+  // Resaltar las coincidencias en texto
   let highlighted = '';
   let lastIndex = 0;
   matches.forEach((matchIndex) => {
@@ -60,5 +60,5 @@ export const searchPattern = (pattern, text1, setHighlightedText, setMatches, se
   });
   highlighted += text1.slice(lastIndex); 
 
-  setHighlightedText(highlighted); // Actualizamos el texto resaltado
+  setHighlightedText(highlighted); 
 };

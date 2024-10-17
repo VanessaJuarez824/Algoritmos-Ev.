@@ -3,7 +3,7 @@ import './App.css';
 import { searchPattern } from './functions/search';
 import { highlightLCS } from './functions/similarity';
 import { highlightPalindrome, manacher } from './functions/palindrome';
-import { buildTrieFromText, autocomplete } from './functions/autocomplete'; // Importamos el Trie para autocompletar
+import { buildTrieFromText, autocomplete } from './functions/autocomplete'; 
 
 function App() {
   const [text1, setText1] = useState(''); 
@@ -28,14 +28,14 @@ function App() {
       setHighlightedText(content);
 
       if (updateTrie) {
-        const trie = buildTrieFromText(content); // Generamos el Trie a partir del nuevo texto
-        setTrie(trie); // Actualizamos el Trie
+        const trie = buildTrieFromText(content); // Generamos Trie 
+        setTrie(trie); // Actualizamos 
       }
     };
     reader.readAsText(file);
   };
 
-  // Función para limpiar el texto
+  // Función pa limpiar texto
   const clearText = (setText, setHighlightedText, clearTrie) => {
     setText('');
     setHighlightedText(''); 
@@ -45,25 +45,25 @@ function App() {
     }
   };
 
-  // Función para realizar la búsqueda con el algoritmo Z
+  // Función para la búsqueda algoritmo Z
   const handleSearch = () => {
     setHighlightedText1(text1); 
     searchPattern(searchTerm, text1, setHighlightedText1, setMatches, setCurrentMatchIndex);
   };
 
-  // Función para encontrar la similitud más grande (LCS)
+  // Función para similitud más grande LCS
   const handleSimilarity = () => {
     highlightLCS(text1, text2, setHighlightedText1, setHighlightedText2);
   };
 
-  // Función para ejecutar el algoritmo Manacher y actualizar la tarjeta con el palíndromo más grande
+  // Función para algoritmo Manacher 
   const handlePalindrome = () => {
     highlightPalindrome(text1, setHighlightedText1); 
     const palindrome = manacher(text1); 
     setLargestPalindrome(palindrome); 
   };
 
-  // Función para navegar a la siguiente coincidencia
+  // Función para navegar a sig coincidencia
   const handleNext = () => {
     if (matches.length > 0) {
       const nextIndex = (currentMatchIndex + 1) % matches.length; 
@@ -72,7 +72,7 @@ function App() {
     }
   };
 
-  // Función para navegar a la coincidencia anterior
+  // Función para navegar a coincidencia anterior
   const handlePrevious = () => {
     if (matches.length > 0) {
       const prevIndex = (currentMatchIndex - 1 + matches.length) % matches.length; 
@@ -81,7 +81,7 @@ function App() {
     }
   };
 
-  // Función para resaltar la coincidencia actual
+  // Función para resaltar coincidencia actual
   const highlightMatch = (matches, index) => {
     const startIndex = matches[index];
     const endIndex = startIndex + searchTerm.length;
@@ -96,7 +96,7 @@ function App() {
     const input = e.target.value;
     setInputValue(input); 
     if (trie && input.length > 0) {
-      const suggestions = autocomplete(trie, input, text1); // Buscamos palabras que comiencen con el prefijo
+      const suggestions = autocomplete(trie, input, text1); 
       setAutocompleteSuggestions(suggestions);
     } else {
       setAutocompleteSuggestions([]); 
