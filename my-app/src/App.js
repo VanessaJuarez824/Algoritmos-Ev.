@@ -20,16 +20,24 @@ function App() {
 
   // Función para leer archivo y setear su contenido
   const handleFileRead = (event, setText, setHighlightedText, updateTrie) => {
-    const file = event.target.files[0];
+    const file = event.target.files[0]; // Intentamos acceder al archivo
+  
+    // Verificar si no se seleccionó un archivo
+    if (!file) {
+      alert("Selecciona un archivo"); // Muestra el popup
+      return; // Termina la función si no hay archivo seleccionado
+    }
+  
+    // Si se selecciona un archivo, lo procesamos
     const reader = new FileReader();
     reader.onload = (e) => {
       const content = e.target.result;
       setText(content);
       setHighlightedText(content);
-
+  
       if (updateTrie) {
-        const trie = buildTrieFromText(content); // Generamos Trie 
-        setTrie(trie); // Actualizamos 
+        const trie = buildTrieFromText(content); // Generamos el Trie a partir del nuevo texto
+        setTrie(trie); // Actualizamos el Trie
       }
     };
     reader.readAsText(file);
