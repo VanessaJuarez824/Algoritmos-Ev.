@@ -106,7 +106,7 @@ function App() {
   return (
     <div className="container">
       <header className="header">
-        <h1>Evidencia 1 - Vanessa Juarez y Alejandra Teran</h1>
+        <h1>Evidencia 1 - Vanessa Juárez y Alejandra Terán</h1>
       </header>
 
       <div className="content">
