@@ -1,8 +1,8 @@
-# Evidencia1-TC2038.607
-Aplicación Web para el procesamiento de archivos de texto plano.
+# Evidence1-TC2038.607
+Web Application for Processing Plain Text Files
 
-### Funcionalidades:
-- Buscar un patrón P en un texto T. Se deben encontrar todas las apariciones del patrón y resaltarlas con color amarillo sobre el texto original. Para realizar esta operación se usara algoritmo KMP o Z. La búsqueda puede incluir letras, palabras, o enunciados (esto incluye los espacios en blanco entre palabras).
-- Encontrar la subcadena común más larga entre dos textos T1 y T2  (similitud más grande entre los textos). La subcadena encontrada se deberá resaltar en color azul con uso de Algoritmo LCS.
-- Buscar el palíndromo más grande en un texto T. Resaltar el palíndromo con color verde. Usar el algoritmo Manacher.
-- Conforme el usuario escriba texto en un text field se deberá mostrar una lista desplegable de opciones para auto-completar el texto. Para esto, parta el contenido del texto original en palabras para así generar tokens por palabra. Se mantien los tokens mediante la estructura de datos Tries.
+### Features:
+- Finds all occurrences of a pattern (P) within a given text and highlights them in yellow. The search supports letters, words, or entire sentences (including spaces). This operation uses either the KMP (Knuth-Morris-Pratt) or Z algorithm.
+- Identifies the longest shared substring between two texts (T1 and T2) and highlights it in blue. This feature measures text similarity using the LCS algorithm.
+- Finds the largest palindrome within a text (T) and highlights it in green. This is implemented using Manacher’s algorithm.
+- As the user types in a text field, a dropdown list of autocomplete suggestions appears. This is achieved by tokenizing the original text into words and storing them efficiently using the Trie data structure.
